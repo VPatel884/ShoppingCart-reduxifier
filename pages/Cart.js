@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 
 export default function Cart() {
   const cartItems = useSelector((state) => state.cartItems);
-  console.log(cartItems);
 
   return (
     <div className="cart-container">
@@ -20,6 +19,7 @@ export default function Cart() {
           ({ productId, title, rating, price, imageUrl, quantity }) => (
             <CartItem
               key={productId}
+              productId={productId}
               title={title}
               price={price}
               quantity={quantity}
@@ -32,7 +32,13 @@ export default function Cart() {
           <div></div>
           <div></div>
           <div></div>
-          <div className="total">$181.93</div>
+          <div className="total">
+            $
+            {cartItems.reduce(
+              (acc, curr) => acc + curr.quantity * curr.price,
+              0
+            )}
+          </div>
         </div>
       </div>
     </div>
