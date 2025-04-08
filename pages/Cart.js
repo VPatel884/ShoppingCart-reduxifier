@@ -1,20 +1,16 @@
 import React from "react";
 import CartItem from "../components/CartItem";
 import { useSelector } from "react-redux";
+import {
+  allCartItems,
+  cartError,
+  cartLoading,
+} from "../store/slices/cartSlice";
 
 export default function Cart() {
-  const cartItems = useSelector(({ products, cartItems }) => {
-    return cartItems.list
-      .map(({ productId, quantity }) => {
-        const cartproduct = products.list.find(
-          (product) => product.id === productId
-        );
-        return { ...cartproduct, quantity };
-      })
-      .filter(({ title }) => title);
-  });
-  const isLoading = useSelector((state) => state.cartItems.loading);
-  const error = useSelector((state) => state.cartItems.error);
+  const cartItems = useSelector(allCartItems);
+  const isLoading = useSelector(cartLoading);
+  const error = useSelector(cartError);
 
   return (
     <div className="cart-container">
@@ -47,17 +43,18 @@ export default function Cart() {
           <div></div>
           <div></div>
           <div></div>
-          {!isLoading ||
-            (error && (
-              <div className="total">
-                $
-                {cartItems.reduce(
+          {!isLoading && !error && (
+            <div className="total">
+              $
+              {cartItems
+                .reduce(
                   (accumulator, currentItem) =>
                     accumulator + currentItem.quantity * currentItem.price,
                   0
-                )}
-              </div>
-            ))}
+                )
+                .toFixed(2)}
+            </div>
+          )}
         </div>
       </div>
     </div>
